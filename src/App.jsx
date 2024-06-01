@@ -1,21 +1,34 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import Header from './components/Header/Header';
 import Categories from './screens/categories/Categories';
+import LoginForm from './screens/auth/loginForm';
+import appStore from './utils/appStore';
+import Subcategories from './screens/categories/subCategories';
 
 const App = () => {
   return (
-    <div className='min-h-screen flex flex-col'>
-      <Header />
-      <div className='flex-grow'>
-        <Categories />
+    <Provider store={appStore} >
+    <Router>
+      <div className='min-h-screen flex flex-col'>
+        <Header />
+        <div className='flex-grow'>
+          <Routes>
+            <Route path="/" element={<Categories />} />
+            <Route path="/login" element={<LoginForm />} />
+            <Route path="/subcategories/:categoryId" element={<Subcategories />} /> {/* Add route */}
+            {/* Add other routes as needed */}
+          </Routes>
+        </div>
+        <footer className="bg-gray-800 text-white text-center py-4">Footer content here</footer>
       </div>
-      <footer className="bg-gray-800 text-white text-center py-4">Footer content here</footer>
-    </div>
+    </Router>
+    </Provider>
   );
 };
 
 export default App;
-
 
 // return (
 //   <>
