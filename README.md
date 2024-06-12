@@ -16,3 +16,4 @@ Currently, two official plugins are available:
 * added show category option in frontend
 * added login option in frontend, need to style it
 * created redux store, added login auth to redux but not stored
+* add image of category as the background of the subcategories page
