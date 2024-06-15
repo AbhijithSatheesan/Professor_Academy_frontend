@@ -9,6 +9,7 @@ function Subcategories() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [backgroundVisible, setBackgroundVisible] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,9 +28,18 @@ function Subcategories() {
         console.log('Data fetched successfully:', jsonData);
         setData(jsonData);
         setLoading(false);
-
         const imageUrl = jsonData.image || placeholderImagePath;
         localStorage.setItem('subcategoryBackgroundImage', imageUrl);
+
+        // Show the background image after 300ms
+        const showBackgroundTimeout = setTimeout(() => {
+          setBackgroundVisible(true);
+        }, 100);
+
+        // Clean up the timeout on component unmount
+        return () => {
+          clearTimeout(showBackgroundTimeout);
+        };
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -51,13 +61,15 @@ function Subcategories() {
   }
 
   const handleSubcategoryClick = (subCategoryId) => {
-    navigate(`/colleges/${subCategoryId}`)
-  }
+    navigate(`/colleges/${subCategoryId}`);
+  };
 
   return (
-    <div className='relative min-h-screen'>
+    <div className="p-8 relative min-h-screen">
       <div
-        className='fixed inset-0 bg-cover bg-center blur-sm'
+        className={`fixed inset-0 bg-cover bg-center blur-sm transition-all duration-1000 ease-in-out ${
+          backgroundVisible ? 'opacity-100' : 'opacity-0'
+        }`}
         style={{
           backgroundImage: `url(${data.image || placeholderImagePath})`,
         }}
@@ -65,13 +77,13 @@ function Subcategories() {
       <div className="fixed top-24 right-6 z-0">
         <img src={backlogo} alt="Backlogo" className="h-20 w-auto" />
       </div>
-      <div className="relative z-10 p-8 flex flex-col items-center">
+      <div className="relative z-10 flex flex-col items-center">
         {data.subcategories ? (
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 mx-auto w-full max-w-7xl">
             {data.subcategories.map((item, index) => (
               <li
                 key={index}
-                className="bg-blue-500 border-2 border-black rounded-md p-1 w-full transition duration-300 ease-in-out hover:bg-blue-400 cursor-pointer"
+                className="bg-blue-400 border-2 border-black rounded-md p-1 w-full transition duration-300 ease-in-out hover:bg-blue-500 cursor-pointer"
                 onClick={() => handleSubcategoryClick(item.id)}
               >
                 <span className="block text-center text-lg font-medium">{item.name}</span>
@@ -87,6 +99,14 @@ function Subcategories() {
 }
 
 export default Subcategories;
+
+
+
+
+
+
+
+
 
 // import React, { useState, useEffect } from 'react';
 // import { useParams } from 'react-router-dom';

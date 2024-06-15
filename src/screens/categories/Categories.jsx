@@ -28,7 +28,7 @@ function Categories() {
   };
 
   return (
-    <div className="p-8 bg-black relative min-h-screen">
+    <div className="p-8 bg-white relative min-h-screen">
     <div
       className={`fixed inset-0 flex justify-center items-center ${
         logoOnTop

@@ -52,13 +52,13 @@ function CollegeList() {
   }
 
   return (
-    <div className='p-8 bg-black relative min-h-screen'>
-    <div
+    <div className='p-8 bg-white relative min-h-screen'>
+    {/* <div
       className='fixed inset-0 pointer-events-none z-0 bg-cover bg-center blur-sm'
       style={{
         backgroundImage: `url(${storedBackgroundImage || placeholderImagePath})`,
       }}
-    />
+    /> */}
     <div className="p-8 relative z-10">
       <h1 className="text-4xl font-bold mb-4 text-white">{data.name}</h1>
       <ul className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -66,7 +66,7 @@ function CollegeList() {
           <li
             key={index}
             className="bg-white shadow-lg rounded-lg overflow-hidden transition-transform hover:scale-105 duration-300 flex flex-col sm:flex-row hover:bg-indigo-50"
-            style={{ width: '100%', maxWidth: '60rem', height: '100%', maxHeight: '250rem' }} // Responsive size for the container in rem
+            style={{ width: '100%', maxWidth: '50rem', height: '100%', maxHeight: '250rem' }} // Responsive size for the container in rem
             onClick={() => handleCollegeClick(item.id, item)}
           >
             <div className="w-full sm:w-1/2 p-2">
