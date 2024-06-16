@@ -9,7 +9,7 @@ const CollegePage = () => {
   const collegeData = location.state?.collegeData || null;
   const [modalImage, setModalImage] = useState(null);
 
-  const markedCollegeIds = useSelector(state => state.user.marked_college_ids || []);
+  const markedCollegeIds = useSelector(state => state.user.marked_colleges || []);
 
   if (!collegeData) {
     return <div className="text-center text-gray-500 mt-10">No college data available</div>;
