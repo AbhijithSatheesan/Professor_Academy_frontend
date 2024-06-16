@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import placeholderImagePath from '../../assets/no_image.png';
 import backlogo from '../../assets/professor.png';
 
@@ -10,6 +9,7 @@ function Subcategories() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [backgroundVisible, setBackgroundVisible] = useState(false);
+  const [subcategoriesVisible, setSubcategoriesVisible] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,6 +34,16 @@ function Subcategories() {
         // Show the background image after 300ms
         const showBackgroundTimeout = setTimeout(() => {
           setBackgroundVisible(true);
+
+          // Show the subcategories after the background image is visible
+          const showSubcategoriesTimeout = setTimeout(() => {
+            setSubcategoriesVisible(true);
+          }, 500);
+
+          // Clean up the timeout on component unmount
+          return () => {
+            clearTimeout(showSubcategoriesTimeout);
+          };
         }, 100);
 
         // Clean up the timeout on component unmount
@@ -78,7 +88,7 @@ function Subcategories() {
         <img src={backlogo} alt="Backlogo" className="h-20 w-auto" />
       </div>
       <div className="relative z-10 flex flex-col items-center">
-        {data.subcategories ? (
+        {subcategoriesVisible && data.subcategories ? (
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 mx-auto w-full max-w-7xl">
             {data.subcategories.map((item, index) => (
               <li
