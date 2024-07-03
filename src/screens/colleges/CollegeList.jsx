@@ -1,10 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import placeholderImagePath from '../../assets/no_image.png';
 import backlogo from '../../assets/professor.png';
 import CollegeCard from '../../components/CollegeCard/CollegeCard';
-import likedicon from '../../assets/liked.png'
 
 function CollegeList() {
   const { subCategoryId } = useParams();
@@ -63,8 +61,9 @@ function CollegeList() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className='text-center text-2xl font-semibold text-gray-500 animate-pulse'>Loading...</p>
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <img src={backlogo} alt="Loading..." className="h-20 w-auto mb-4 animate-pulse" />
+        <p className='text-center text-xl font-semibold text-gray-800 animate-pulse'>Loading...</p>
       </div>
     );
   }
@@ -116,8 +115,6 @@ function CollegeList() {
 }
 
 export default CollegeList;
-
-
 
 
 

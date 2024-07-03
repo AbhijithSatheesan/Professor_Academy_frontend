@@ -27,14 +27,19 @@ const Header = () => {
         </Link>
       </div>
 
-      <div className="hidden md:flex md:flex-grow md:justify-center h-full">
-        <div className="searchbox flex items-center bg-blue-200 rounded-full shadow-md overflow-hidden h-2/4 w-full max-w-md">
+      <div className="hidden md:flex flex-grow justify-center h-full ">
+        <div className="relative w-full max-w-md ">
+          <div className="absolute inset-0 flex items-center pointer-events-none ">
+            <svg className="w-5 h-5 text-gray-400 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg ">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-4.35-4.35m1.68-5.19a7.5 7.5 0 10-15 0 7.5 7.5 0 0015 0z "></path>
+            </svg>
+          </div>
           <input
-            type="text"
+            type="text "
             placeholder="Search colleges, courses..."
-            className="bg-blue-200 text-gray-700 p-2 pl-4 outline-none flex-grow"
+            className="w-full pl-10 pr-4 py-2 rounded-full shadow-md bg-blue-200 text-gray-700 outline-none mt-7"
           />
-          <button className="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600">
+          <button className="absolute right-0 top-0 mt-7 bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600">
             Search
           </button>
         </div>

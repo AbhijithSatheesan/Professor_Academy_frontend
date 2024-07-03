@@ -31,22 +31,18 @@ function Subcategories() {
         const imageUrl = jsonData.image || placeholderImagePath;
         localStorage.setItem('subcategoryBackgroundImage', imageUrl);
 
-        // Show the background image after 300ms
         const showBackgroundTimeout = setTimeout(() => {
           setBackgroundVisible(true);
 
-          // Show the subcategories after the background image is visible
           const showSubcategoriesTimeout = setTimeout(() => {
             setSubcategoriesVisible(true);
           }, 500);
 
-          // Clean up the timeout on component unmount
           return () => {
             clearTimeout(showSubcategoriesTimeout);
           };
         }, 100);
 
-        // Clean up the timeout on component unmount
         return () => {
           clearTimeout(showBackgroundTimeout);
         };
@@ -59,7 +55,12 @@ function Subcategories() {
   }, [categoryId]);
 
   if (loading) {
-    return <p className="text-center text-gray-500">Loading...</p>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <img src={backlogo} alt="Loading..." className="h-20 w-auto mb-4 animate-pulse" />
+        <p className="text-center text-2xl font-semibold text-gray-500 animate-pulse">Loading...</p>
+      </div>
+    );
   }
 
   if (error) {
@@ -101,7 +102,10 @@ function Subcategories() {
             ))}
           </ul>
         ) : (
-          <p className="text-center text-white">Loading...</p>
+          <div className="flex flex-col items-center justify-center min-h-screen">
+            <img src={backlogo} alt="Loading..." className="h-20 w-auto mb-4 animate-pulse" />
+            <p className="text-center text-2xl font-semibold text-white animate-pulse">Loading...</p>
+          </div>
         )}
       </div>
     </div>

@@ -6,6 +6,7 @@ import notlikedicon from '../../assets/like.png';
 import axios from 'axios';
 import { updateMarkedCollegeIds } from '../../utils/userSlice';
 import placeholderImagePath from '../../assets/no_image.png';
+import backlogo from '../../assets/professor.png';
 
 const CollegePage = () => {
   const { collegeId } = useParams();
@@ -49,7 +50,12 @@ const CollegePage = () => {
   }, [collegeId]);
 
   if (!collegeData) {
-    return <div className="text-center text-gray-500 mt-10">No college data available</div>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <img src={backlogo} alt="Loading..." className="h-20 w-auto mb-4 animate-pulse" />
+        <p className="text-center text-2xl font-semibold text-gray-500 animate-pulse">Loading...</p>
+      </div>
+    );
   }
 
   const {
@@ -77,7 +83,7 @@ const CollegePage = () => {
 
   const handleLikeClick = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         '/api/users/markcollege/',
         {
           user_id: userId,
@@ -174,18 +180,18 @@ const CollegePage = () => {
                       {section.label && (
                         <h2 className="text-xl font-semibold mb-2">{section.label}</h2>
                       )}
-                          {section.image && (
-                          <div className="flex justify-center p-4 border-b">
-                            <img
-                              src={section.image}
-                              alt={section.label}
-                              className="w-3/4 max-h-64 object-cover cursor-pointer rounded-md transition-transform transform hover:scale-105"
-                              onClick={() => handleImageClick(section.image)}
-                            />
-                          </div>
-                        )}
-                        {section.images && (
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4">
+                      {section.image && (
+                        <div className="flex justify-center p-4 border-b">
+                          <img
+                            src={section.image}
+                            alt={section.label}
+                            className="w-3/4 max-h-64 object-cover cursor-pointer rounded-md transition-transform transform hover:scale-105"
+                            onClick={() => handleImageClick(section.image)}
+                          />
+                        </div>
+                      )}
+                      {section.images && (
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4">
                           {section.images.map((image, idx) => (
                             <div className="flex justify-center items-center" key={idx}>
                               <img
@@ -197,46 +203,43 @@ const CollegePage = () => {
                             </div>
                           ))}
                         </div>
-
-                        )}
+                      )}
                     </div>
                   ))}
                 </div>
               </div>
             </div>
           ) : (
-            <p className="text-center text-white animate-pulse text-xl">Loading...</p>)}
-            </div>
-          </div>
-    
-          {modalImage && (
-            <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-              <div className="relative max-w-5xl w-full p-4">
-                <button
-                  className="absolute top-2 right-2 text-white text-2xl"
-                  onClick={handleCloseModal}
-                >
-                  &times;
-                </button>
-                <img
-                  src={modalImage}
-                  alt="Modal view"
-                  className="w-full h-full object-contain rounded-lg"
-                />
-              </div>
+            <div className="flex flex-col items-center justify-center min-h-screen">
+              <img src={backlogo} alt="Loading..." className="h-20 w-auto mb-4 animate-pulse" />
+              <p className="text-center text-2xl font-semibold text-white animate-pulse">Loading...</p>
             </div>
           )}
         </div>
-      );
-    };
-    
-    export default CollegePage;
+      </div>
 
+      {modalImage && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+          <div className="relative max-w-5xl w-full p-4">
+            <button
+              className="absolute top-2 right-2 text-white text-2xl"
+              onClick={handleCloseModal}
+            >
+              &times;
+            </button>
+            <img
+              src={modalImage}
+              alt="Modal view"
+              className="w-full h-full object-contain rounded-lg"
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
-
-
-
-
+export default CollegePage;
 
 
 
