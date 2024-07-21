@@ -40,11 +40,11 @@ const AdminDashboard = () => {
         <div className="bg-white rounded-xl shadow-2xl p-6 sm:p-8 mb-8 sm:mb-12">
           <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-gray-700 border-b pb-4">Dashboard</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
-            <ActionButton title="Add Student" icon="➕👤" path="/add-student" />
+            <ActionButton title="Add User" icon="➕👤" path="/add-student" />
             
             <ActionButton title="Add College" icon="➕🏫" path="/add-college" />
             
-            <ActionButton title="Add Admin" icon="➕🛡️" path="/add-admin" />
+            
           </div>
           <div className="grid sm:grid-cols-3 gap-6 sm:gap-8">
             <StatItem title="Total Students" value={stats.student_count} icon="👥" />

@@ -120,46 +120,56 @@ const UserDetails = () => {
         </div>
         <div className="border-b border-gray-100 mb-4"></div>
         <div className="flex flex-col text-xs md:text-base">
-          <div className="flex items-center mb-4 cursor-pointer" onClick={handleOptionCollegesClick}>
+          <button
+            className={`flex items-center mb-4 cursor-pointer w-full text-left py-2 px-4 ${
+              currentView === 'colleges' ? 'bg-gray-600' : ''
+            }`}
+            onClick={handleOptionCollegesClick}
+          >
             <FaUniversity className="text-xl md:text-2xl mr-2" />
-            <span>Marked Colleges </span>
-          </div>
+            <span>Marked Colleges</span>
+          </button>
           <div className="border-b border-gray-100 mb-4"></div>
-          <div className="flex items-center mb-2 cursor-pointer" onClick={handleFeeUpdatedClick}>
+          <button
+            className={`flex items-center mb-2 cursor-pointer w-full text-left py-2 px-4 ${
+              currentView === 'feeUpdated' ? 'bg-gray-600' : ''
+            }`}
+            onClick={handleFeeUpdatedClick}
+          >
             <FaMoneyBillAlt className="text-xl md:text-2xl mr-2" />
             <span>Fee Updated</span>
-          </div>
+          </button>
         </div>
         <div className="mt-2 border-t border-gray-100 pt-4 flex flex-col space-y-4">
           {isAdmin && (
-            <div className="flex items-center cursor-pointer">
+            <button className="flex items-center cursor-pointer w-full text-left py-2 px-4">
               <FaUserShield className="text-xl md:text-2xl mr-2" />
               <Link to="/adminishere" className="text-white">
                 Admin Panel
               </Link>
-            </div>
+            </button>
           )}
-          <div className="flex items-center">
+          <button className="flex items-center w-full text-left py-2 px-4">
             <FaSignOutAlt className="text-xl md:text-2xl mr-2" />
             <Link to="/logout" className="text-white">
               Logout
             </Link>
-          </div>
+          </button>
         </div>
       </div>
 
-      {(currentView !== 'user' || window.innerWidth >= 768) && (
-        <div className="flex flex-col items-center py-10 px-4 md:px-20 w-full md:w-2/3 lg:w-4/5 md:ml-[33.333333%] lg:ml-[20%]">
-          {currentView !== 'user' && window.innerWidth < 768 && (
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 flex items-center"
-              onClick={handleBackToUserClick}
-            >
-              <FaArrowLeft className="mr-2" /> Back to Profile
-            </button>
-          )}
-          <div className="w-full">
-            {filteredColleges?.map((college) => (
+      <div className="flex flex-col items-center py-10 px-4 md:px-20 w-full md:w-2/3 lg:w-4/5 md:ml-[33.333333%] lg:ml-[20%]">
+        {currentView !== 'user' && window.innerWidth < 768 && (
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 flex items-center"
+            onClick={handleBackToUserClick}
+          >
+            <FaArrowLeft className="mr-2" /> Back to Profile
+          </button>
+        )}
+        <div className="w-full">
+          {filteredColleges && filteredColleges.length > 0 ? (
+            filteredColleges.map((college) => (
               <div
                 key={college.college_id}
                 className="college-card bg-white shadow-md overflow-hidden cursor-pointer mb-4 w-full md:flex"
@@ -191,12 +201,104 @@ const UserDetails = () => {
                   </p>
                 </div>
               </div>
-            ))}
-          </div>
+            ))
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-xl font-semibold text-gray-600">
+                {currentView === 'feeUpdated' ? 'No fee updated colleges found' : 'No marked colleges found'}
+              </p>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
 
 export default UserDetails;
+
+
+
+
+
+
+
+
+
+// import React, { useEffect, useState } from 'react';
+// import { useSelector } from 'react-redux';
+// import axios from 'axios';
+// import { useNavigate } from 'react-router-dom';
+// import UserSidebar from './UserSidebar';
+// import LikedCollegeList from './LikedCollegeList';
+// import UserLoadingSpinner from './UserLoadingSpinner';
+
+
+// const UserDetails = () => {
+//   const user = useSelector(state => state.user);
+//   const { user_id, access } = user;
+//   const [userDetails, setUserDetails] = useState(null);
+//   const [isLoading, setIsLoading] = useState(true);
+//   const [error, setError] = useState(null);
+//   const [currentView, setCurrentView] = useState('user');
+//   const [isAdmin, setIsAdmin] = useState(false);
+//   const navigate = useNavigate();
+
+//   const decodeToken = (token) => {
+//     // ... (keep the existing decodeToken function)
+//   };
+
+//   useEffect(() => {
+//     const decodedToken = decodeToken(access);
+//     setIsAdmin(decodedToken && decodedToken.is_staff);
+//   }, [access]);
+
+//   useEffect(() => {
+//     const fetchUserDetails = async () => {
+//       // ... (keep the existing fetchUserDetails function)
+//     };
+
+//     fetchUserDetails();
+//   }, [user_id, access, navigate]);
+
+//   const handleCollegeClick = (college) => {
+//     navigate(`/college/${college.college_id}`, { state: { collegeData: college } });
+//   };
+
+//   if (isLoading) {
+//     return <UserLoadingSpinner />;
+//   }
+
+//   if (error) {
+//     return <div>Error: {error}</div>;
+//   }
+
+//   const filteredColleges = currentView === 'feeUpdated'
+//     ? userDetails?.marked_colleges.filter(college => college.fee && college.fee !== '0')
+//     : userDetails?.marked_colleges;
+
+//   return (
+//     <div className="flex flex-col md:flex-row bg-gray-100 min-h-screen">
+//       <UserSidebar
+//         user={user}
+//         userDetails={userDetails}
+//         currentView={currentView}
+//         setCurrentView={setCurrentView}
+//         isAdmin={isAdmin}
+//       />
+//       <LikedCollegeList
+//         currentView={currentView}
+//         filteredColleges={filteredColleges}
+//         handleCollegeClick={handleCollegeClick}
+//       />
+//     </div>
+//   );
+// };
+
+// export default UserDetails;
+
+
+
+
+
+

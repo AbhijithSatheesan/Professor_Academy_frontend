@@ -13,6 +13,8 @@ import UserDetails from './screens/user/UserDetails';
 import Tester from './screens/Tester';
 import Admin from './Admin/Admin';
 import UserRegistration from './Admin/UserRegistration';
+import AddCollege from './Admin/AdminCollege/AddCollege';
+import CategorySubcategoryForm from './Admin/CategorySubcategoryForm';
 
 const HEADER_HEIGHT = '6rem';
 const FOOTER_HEIGHT = '3rem';
@@ -43,7 +45,12 @@ const App = () => {
         <Router>
           <Routes>
             <Route path="/login" element={<LoginForm />} />
+
+            {/* admin */}
             <Route path="/add-student" element={<UserRegistration />} />
+            <Route path="/add-college" element={<AddCollege />} />
+            <Route path="/addcategories" element={<CategorySubcategoryForm />} />
+
             
             <Route
               path="/"
