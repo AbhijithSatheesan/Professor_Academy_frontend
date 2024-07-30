@@ -12,12 +12,21 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+
+    //  Login fucnctionality
+
     addUser: (state, action) => {
       return action.payload;
     },
+
+    // Logout functionality
+    
     removeUser: (state) => {
       return initialState;
     },
+
+    // Like functionality
+
     updateMarkedCollegeIds: (state, action) => {
       const { collegeId } = action.payload;
       const isCollegeMarked = state.marked_college_ids.includes(collegeId);

@@ -15,6 +15,9 @@ import Admin from './Admin/Admin';
 import UserRegistration from './Admin/UserRegistration';
 import AddCollege from './Admin/AdminCollege/AddCollege';
 import CategorySubcategoryForm from './Admin/CategorySubcategoryForm';
+import AdminEditUsers from './Admin/Adminuser/AdminEditUsers';
+import UserLogout from './screens/auth/UserLogout';
+
 
 const HEADER_HEIGHT = '6rem';
 const FOOTER_HEIGHT = '3rem';
@@ -50,6 +53,8 @@ const App = () => {
             <Route path="/add-student" element={<UserRegistration />} />
             <Route path="/add-college" element={<AddCollege />} />
             <Route path="/addcategories" element={<CategorySubcategoryForm />} />
+            <Route path="/admin/edit-user/:id" element={<AdminEditUsers />} />
+            
 
             
             <Route
@@ -118,6 +123,16 @@ const App = () => {
                 <RequireAuth>
                   <MainLayout>
                     <UserDetails />
+                  </MainLayout>
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/logout"
+              element={
+                <RequireAuth>
+                  <MainLayout>
+                    <UserLogout />
                   </MainLayout>
                 </RequireAuth>
               }

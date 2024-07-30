@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import AdminDashboard from './AdminDashboard';
-import AdminPageUsers from './AdminPageUsers';
-import AdminPageColleges from './AdminPageColleges';
+import AdminPageUsers from './Adminuser/AdminPageUsers';
+import AdminPageColleges from './AdminCollege/AdminPageColleges';
 
 const Admin = () => {
   const user = useSelector((state) => state.user);
   const [selectedComponent, setSelectedComponent] = useState('Dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
@@ -20,6 +21,12 @@ const Admin = () => {
       setIsAdmin(false);
     }
   }, [user.admission_placed]);
+
+  useEffect(() => {
+    if (location.state?.selectedComponent) {
+      setSelectedComponent(location.state.selectedComponent);
+    }
+  }, [location.state]);
 
   if (!isAdmin) {
     return null;
@@ -38,10 +45,15 @@ const Admin = () => {
     }
   };
 
+  const handleComponentChange = (component) => {
+    setSelectedComponent(component);
+    setSidebarOpen(false);
+  };
+
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar for small screens */}
-      {sidebarOpen ? (
+      {sidebarOpen && (
         <div className="fixed inset-0 bg-gray-800 text-white z-10 lg:hidden flex flex-col">
           <div className="absolute top-4 right-4 flex flex-col items-end mt-20">
             <img
@@ -59,36 +71,18 @@ const Admin = () => {
                 className={`w-full text-left py-2 px-4 text-xs lg:text-sm ${
                   selectedComponent === item ? 'bg-gray-700' : ''
                 }`}
-                onClick={() => {
-                  setSelectedComponent(item);
-                  setSidebarOpen(false);
-                }}
+                onClick={() => handleComponentChange(item)}
               >
                 {item}
               </button>
             ))}
             <button
               className="w-full text-left py-2 px-4 text-xs lg:text-sm"
-              onClick={() => {
-                navigate('/myprofile');
-                setSidebarOpen(false);
-              }}
+              onClick={() => navigate('/myprofile')}
             >
               Back to Profile
             </button>
           </nav>
-        </div>
-      ) : (
-        <div className="flex-1 p-4 lg:p-8 overflow-y-auto">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 lg:hidden"
-            onClick={() => setSidebarOpen(true)}
-          >
-            Back to Actions
-          </button>
-          <div className="max-w-4xl">
-            {renderComponent()}
-          </div>
         </div>
       )}
 
@@ -110,9 +104,7 @@ const Admin = () => {
               className={`w-full text-left py-2 px-4 text-xs lg:text-sm ${
                 selectedComponent === item ? 'bg-gray-700' : ''
               }`}
-              onClick={() => {
-                setSelectedComponent(item);
-              }}
+              onClick={() => handleComponentChange(item)}
             >
               {item}
             </button>
@@ -126,8 +118,14 @@ const Admin = () => {
         </nav>
       </div>
 
-      {/* Main Content Area for large screens */}
-      <div className="hidden lg:block flex-1 p-4 lg:p-8 overflow-y-auto lg:ml-72">
+      {/* Main Content Area */}
+      <div className="flex-1 p-4 lg:p-8 overflow-y-auto lg:ml-72">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 lg:hidden"
+          onClick={() => setSidebarOpen(true)}
+        >
+          Open Menu
+        </button>
         <div className="max-w-4xl">
           {renderComponent()}
         </div>

@@ -6,6 +6,7 @@ import placeholderImagePath from '../../assets/no_image.png';
 import locationIcon from '../../assets/location-icon.png';
 import { FaUniversity, FaMoneyBillAlt, FaSignOutAlt, FaArrowLeft, FaUserShield } from 'react-icons/fa';
 import backlogo from '../../assets/professor.png';
+import UserLogout from '../auth/UserLogout';
 
 const UserDetails = () => {
   const user = useSelector(state => state.user);
@@ -15,6 +16,7 @@ const UserDetails = () => {
   const [error, setError] = useState(null);
   const [currentView, setCurrentView] = useState('user');
   const [isAdmin, setIsAdmin] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const navigate = useNavigate();
 
   const decodeToken = (token) => {
@@ -84,6 +86,18 @@ const UserDetails = () => {
     setCurrentView('user');
   };
 
+  const handleLogoutClick = () => {
+    setShowLogoutConfirm(true);
+  };
+
+  const handleLogoutConfirm = () => {
+    setShowLogoutConfirm(false);
+  };
+
+  const handleLogoutCancel = () => {
+    setShowLogoutConfirm(false);
+  };
+
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
@@ -149,11 +163,12 @@ const UserDetails = () => {
               </Link>
             </button>
           )}
-          <button className="flex items-center w-full text-left py-2 px-4">
+          <button 
+            className="flex items-center w-full text-left py-2 px-4"
+            onClick={handleLogoutClick}
+          >
             <FaSignOutAlt className="text-xl md:text-2xl mr-2" />
-            <Link to="/logout" className="text-white">
-              Logout
-            </Link>
+            <span className="text-white">Logout</span>
           </button>
         </div>
       </div>
@@ -211,6 +226,28 @@ const UserDetails = () => {
           )}
         </div>
       </div>
+
+      {/* Logout confirmation modal */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+          <div className="bg-white p-5 rounded-lg shadow-xl">
+            <h2 className="text-xl font-bold mb-4">Confirm Logout</h2>
+            <p className="mb-4">Are you sure you want to logout?</p>
+            <div className="flex justify-end">
+              <button 
+                className="bg-blue-300 hover:bg-blue-400 text-black font-bold py-2 px-4 rounded mr-2"
+                onClick={handleLogoutCancel}
+              >
+                Cancel
+              </button>
+              <button
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mr-2">
+              <UserLogout onConfirm={handleLogoutConfirm} />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

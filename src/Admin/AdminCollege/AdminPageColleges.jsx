@@ -13,6 +13,12 @@ const AdminPageColleges = () => {
     fetchSubcategories();
   }, []);
 
+  useEffect(() => {
+    if (selectedSubcategory) {
+      fetchColleges(selectedSubcategory);
+    }
+  }, [selectedSubcategory]);
+
   const fetchSubcategories = async () => {
     setLoading(true);
     try {
@@ -30,7 +36,6 @@ const AdminPageColleges = () => {
     try {
       const response = await axios.get(`/api/colleges/subcategory/${subCategory.id}/colleges/`);
       setColleges(response.data);
-      setSelectedSubcategory(subCategory);
     } catch (error) {
       console.error('Error fetching colleges:', error);
     } finally {
@@ -46,6 +51,10 @@ const AdminPageColleges = () => {
 
   const handleBackToColleges = () => {
     setSelectedCollege(null);
+    // Refresh the list of colleges when returning from EditCollegeDetails
+    if (selectedSubcategory) {
+      fetchColleges(selectedSubcategory);
+    }
   };
 
   return (
@@ -107,7 +116,7 @@ const AdminPageColleges = () => {
                 <button
                   key={subcategory.id}
                   className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded transition duration-300 text-left"
-                  onClick={() => fetchColleges(subcategory)}
+                  onClick={() => setSelectedSubcategory(subcategory)}
                 >
                   {subcategory.name}
                 </button>
