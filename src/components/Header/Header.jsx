@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import logo_professor from '../../assets/professor.png';
 import HamburgerMenu from 'react-hamburger-menu';
+import SearchComponent from '../Search/SearchComponent';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { user_name, image } = useSelector(state => state.user);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -14,6 +17,14 @@ const Header = () => {
 
   const handleNavItemClick = () => {
     setIsOpen(false);
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+      setIsOpen(false);  // Close the mobile menu after search
+    }
   };
 
   return (
@@ -29,19 +40,23 @@ const Header = () => {
 
       <div className="hidden md:flex flex-grow justify-center h-full ">
         <div className="relative w-full max-w-md ">
-          <div className="absolute inset-0 flex items-center pointer-events-none ">
-            <svg className="w-5 h-5 text-gray-400 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg ">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-4.35-4.35m1.68-5.19a7.5 7.5 0 10-15 0 7.5 7.5 0 0015 0z "></path>
-            </svg>
-          </div>
-          <input
-            type="text "
-            placeholder="Search colleges, courses..."
-            className="w-full pl-10 pr-4 py-2 rounded-full shadow-md bg-blue-200 text-gray-700 outline-none mt-7"
-          />
-          <button className="absolute right-0 top-0 mt-7 bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600">
-            Search
-          </button>
+          <form onSubmit={handleSearch} className="flex items-center">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-4.35-4.35m1.68-5.19a7.5 7.5 0 10-15 0 7.5 7.5 0 0015 0z"></path>
+              </svg>
+            </div>
+            <input
+              type="text"
+              placeholder="Search colleges, courses..."
+              className="w-full pl-10 pr-4 py-2 rounded-full shadow-md bg-blue-200 text-gray-700 outline-none mt-7"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button type="submit" className="absolute right-0 top-0 mt-7 bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600">
+              Search
+            </button>
+          </form>
         </div>
       </div>
 
@@ -104,15 +119,19 @@ const Header = () => {
               </li>
             </ul>
 
-            <div className="searchbox flex items-center bg-gray-700 rounded-lg overflow-hidden">
-              <input
-                type="text"
-                placeholder="Search colleges, courses..."
-                className="bg-gray-700 text-white p-2 outline-none"
-              />
-              <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
-                Search
-              </button>
+            <div className="searchbox flex items-center bg-gray-700 rounded-lg overflow-hidden p-2">
+              <form onSubmit={handleSearch} className="flex w-full">
+                <input
+                  type="text"
+                  placeholder="Search colleges, courses..."
+                  className="bg-gray-700 text-white p-2 outline-none flex-grow"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 ml-2">
+                  Search
+                </button>
+              </form>
             </div>
           </nav>
 

@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
@@ -75,6 +75,9 @@ function LoginForm() {
             className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700"
           >
             Login
+          </button>
+          <button>
+            <Link to='/passwordreset' >Reset Password</Link>
           </button>
         </form>
       </div>

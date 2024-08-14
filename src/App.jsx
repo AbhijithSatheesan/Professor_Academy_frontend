@@ -17,6 +17,9 @@ import AddCollege from './Admin/AdminCollege/AddCollege';
 import CategorySubcategoryForm from './Admin/CategorySubcategoryForm';
 import AdminEditUsers from './Admin/Adminuser/AdminEditUsers';
 import UserLogout from './screens/auth/UserLogout';
+import PasswordResetRequest from './Passwordreset/PasswordResetRequest';
+import PasswordResetConfirm from './Passwordreset/PasswordResetConfirm';
+import SearchComponent from './components/Search/SearchComponent';
 
 
 const HEADER_HEIGHT = '6rem';
@@ -48,6 +51,12 @@ const App = () => {
         <Router>
           <Routes>
             <Route path="/login" element={<LoginForm />} />
+            <Route path="/passwordreset" element={<PasswordResetRequest />} />
+            
+            <Route path="/passwordresetconfirm/:uid/:token" element={<PasswordResetConfirm />} />
+           
+            
+
 
             {/* admin */}
             <Route path="/add-student" element={<UserRegistration />} />
@@ -123,6 +132,16 @@ const App = () => {
                 <RequireAuth>
                   <MainLayout>
                     <UserDetails />
+                  </MainLayout>
+                </RequireAuth>
+              }
+            />
+             <Route
+              path="/search"
+              element={
+                <RequireAuth>
+                  <MainLayout>
+                    <SearchComponent />
                   </MainLayout>
                 </RequireAuth>
               }
