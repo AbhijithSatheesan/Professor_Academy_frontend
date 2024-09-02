@@ -1,9 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 // Set up CSRF token handling for axios
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
+const Modal = ({ isOpen, onClose, message }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-4 rounded-lg">
+        <p className="mb-4">{message}</p>
+        <div className="flex justify-end">
+          <button onClick={onClose} className="px-4 py-2 bg-blue-500 text-white rounded">Close</button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const ConfirmationModal = ({ isOpen, onClose, onConfirm, message }) => {
   if (!isOpen) return null;
@@ -32,6 +48,9 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
   const [isMainImageDeleteModalOpen, setIsMainImageDeleteModalOpen] = useState(false);
   const [mainImageToDelete, setMainImageToDelete] = useState(null);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const accessToken = useSelector(state => state.user.access);
 
   useEffect(() => {
     fetchCollegeDetails();
@@ -40,7 +59,9 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
 
   const fetchCollegeDetails = async () => {
     try {
-      const response = await axios.get(`/api/colleges/seecollegedetails/${collegeId}`);
+      const response = await axios.get(`/api/colleges/seecollegedetails/${collegeId}`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
       setCollege(response.data);
     } catch (error) {
       console.error('Error fetching college details:', error);
@@ -51,7 +72,9 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
 
   const fetchSubcategories = async () => {
     try {
-      const response = await axios.get('/api/colleges/subcategories');
+      const response = await axios.get('/api/colleges/subcategories', {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
       setSubcategories(response.data);
     } catch (error) {
       console.error('Error fetching subcategories:', error);
@@ -82,15 +105,19 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
 
   const confirmImageDelete = async () => {
     try {
-      await axios.delete(`/api/colleges/other-images/${imageToDelete}/`);
+      await axios.delete(`/api/colleges/other-images/${imageToDelete}/`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
       setCollege(prev => ({
         ...prev,
         other_images: prev.other_images.filter(img => img.id !== imageToDelete)
       }));
-      alert('Image deleted successfully!');
+      setMessage('Image deleted successfully!');
+      setIsMessageModalOpen(true);
     } catch (error) {
       console.error('Error deleting image:', error);
-      alert('Failed to delete image');
+      setMessage('Failed to delete image');
+      setIsMessageModalOpen(true);
     } finally {
       setIsImageDeleteModalOpen(false);
       setImageToDelete(null);
@@ -125,15 +152,20 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
 
     try {
       const response = await axios.put(`/api/colleges/updatecollege/${collegeId}/`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${accessToken}`
+        }
       });
       console.log('Response:', response.data);
-      alert('College updated successfully!');
+      setMessage('College updated successfully!');
+      setIsMessageModalOpen(true);
       fetchCollegeDetails();
       setNewOtherImages([]);
     } catch (error) {
       console.error('Error updating college:', error.response?.data || error.message);
-      alert('Failed to update college: ' + (error.response?.data?.detail || error.message));
+      setMessage('Failed to update college: ' + (error.response?.data?.detail || error.message));
+      setIsMessageModalOpen(true);
     } finally {
       setIsUpdateModalOpen(false);
     }
@@ -145,12 +177,16 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`/api/colleges/updatecollege/${collegeId}/`);
-      alert('College deleted successfully!');
+      await axios.delete(`/api/colleges/updatecollege/${collegeId}/`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+      setMessage('College deleted successfully!');
+      setIsMessageModalOpen(true);
       onBack();
     } catch (error) {
       console.error('Error deleting college:', error);
-      alert('Failed to delete college');
+      setMessage('Failed to delete college');
+      setIsMessageModalOpen(true);
     } finally {
       setIsDeleteModalOpen(false);
     }
@@ -221,7 +257,7 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
             className="w-full border rounded px-2 py-1"
           />
         </div>
-     
+
         {['main_image', 'hostel_image', 'library_image', 'class_image', 'lab_image'].map(imageField => (
           <div key={imageField} className="mb-4">
             <label className="block font-semibold mb-2">{imageField.replace('_', ' ').charAt(0).toUpperCase() + imageField.slice(1).replace('_', ' ')}:</label>
@@ -229,7 +265,6 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
               <div className="flex items-center space-x-4">
                 <img src={college[imageField]} alt={imageField} className="w-32 h-32 object-cover rounded" />
                 <div className="space-y-2">
-                  
                   <button
                     type="button"
                     onClick={() => handleMainImageDelete(imageField, 'delete')}
@@ -326,12 +361,17 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
         onConfirm={confirmUpdate}
         message="Are you sure you want to update this college?"
       />
+
+      <Modal
+        isOpen={isMessageModalOpen}
+        onClose={() => setIsMessageModalOpen(false)}
+        message={message}
+      />
     </div>
   );
 };
 
 export default EditCollegeDetails;
-
 
 
 

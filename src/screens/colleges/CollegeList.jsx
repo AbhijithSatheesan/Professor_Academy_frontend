@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import placeholderImagePath from '../../assets/no_image.png';
 import backlogo from '../../assets/professor.png';
+import nocollegeimage from '../../assets/collegeicon.png'
 import CollegeCard from '../../components/CollegeCard/CollegeCard';
 
 function CollegeList() {
@@ -32,7 +33,7 @@ function CollegeList() {
         setData(jsonData);
         setLoading(false);
 
-        // Show the background image after 300ms
+        // Show the background image after 300ms  
         const showBackgroundTimeout = setTimeout(() => {
           setBackgroundVisible(true);
 

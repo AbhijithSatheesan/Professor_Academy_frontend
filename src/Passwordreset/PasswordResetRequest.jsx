@@ -1,19 +1,25 @@
-// PasswordResetRequest.js
 import React, { useState } from 'react';
 import axios from 'axios';
 
 const PasswordResetRequest = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [isError, setIsError] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post('api/users/password-reset/', { email });
       setMessage(response.data.message);
+      setIsError(false);
     } catch (error) {
       console.error(error);
-      setMessage('An error occurred. Please try again.');
+      setIsError(true);
+      if (error.response && error.response.status === 404) {
+        setMessage('User not found. Please check your email and try again.');
+      } else {
+        setMessage('An error occurred. Please try again.');
+      }
     }
   };
 
@@ -34,7 +40,7 @@ const PasswordResetRequest = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               />
             </div>
           </div>
@@ -50,7 +56,7 @@ const PasswordResetRequest = () => {
         </form>
         {message && (
           <div className="mt-3 text-center text-sm">
-            <p className={`font-medium ${message.includes('error') ? 'text-red-600' : 'text-green-600'}`}>
+            <p className={`font-medium ${isError ? 'text-red-600' : 'text-green-600'}`}>
               {message}
             </p>
           </div>

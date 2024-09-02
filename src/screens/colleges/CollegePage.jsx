@@ -5,15 +5,14 @@ import likedicon from '../../assets/liked.png';
 import notlikedicon from '../../assets/like.png';
 import axios from 'axios';
 import { updateMarkedCollegeIds } from '../../utils/userSlice';
-import placeholderImagePath from '../../assets/no_image.png';
 import backlogo from '../../assets/professor.png';
+import nocollegeimage from '../../assets/collegeicon.png'
 
 const CollegePage = () => {
   const { collegeId } = useParams();
   const [collegeData, setCollegeData] = useState(null);
   const [modalImage, setModalImage] = useState(null);
-  const [backgroundVisible, setBackgroundVisible] = useState(false);
-  const [contentVisible, setContentVisible] = useState(false);
+  const [showLikeMessage, setShowLikeMessage] = useState(true);
 
   const dispatch = useDispatch();
   const markedCollegeIds = useSelector(state => state.user?.marked_college_ids || []);
@@ -32,28 +31,18 @@ const CollegePage = () => {
 
     fetchCollegeData();
 
-    const showBackgroundTimeout = setTimeout(() => {
-      setBackgroundVisible(true);
+    const hideLikeMessageTimeout = setTimeout(() => {
+      setShowLikeMessage(false);
+    }, 3000);
 
-      const showContentTimeout = setTimeout(() => {
-        setContentVisible(true);
-      }, 500);
-
-      return () => {
-        clearTimeout(showContentTimeout);
-      };
-    }, 100);
-
-    return () => {
-      clearTimeout(showBackgroundTimeout);
-    };
+    return () => clearTimeout(hideLikeMessageTimeout);
   }, [collegeId]);
 
   if (!collegeData) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <img src={backlogo} alt="Loading..." className="h-20 w-auto mb-4 animate-pulse" />
-        <p className="text-center text-2xl font-semibold text-gray-500 animate-pulse">Loading...</p>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        <img src={backlogo} alt="Loading..." className="h-24 w-auto mb-6 animate-pulse" />
+        <p className="text-center text-3xl font-semibold text-gray-600 animate-pulse">Loading...</p>
       </div>
     );
   }
@@ -73,30 +62,16 @@ const CollegePage = () => {
     parent_subcategory,
   } = collegeData;
 
-  const handleImageClick = (image) => {
-    setModalImage(image);
-  };
-
-  const handleCloseModal = () => {
-    setModalImage(null);
-  };
+  const handleImageClick = (image) => setModalImage(image);
+  const handleCloseModal = () => setModalImage(null);
 
   const handleLikeClick = async () => {
     try {
       await axios.post(
         '/api/users/markcollege/',
-        {
-          user_id: userId,
-          college_id: id,
-          fee: 0,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
+        { user_id: userId, college_id: id, fee: 0 },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
       );
-
       dispatch(updateMarkedCollegeIds({ collegeId: id }));
     } catch (error) {
       console.error('Error marking college:', error);
@@ -110,127 +85,103 @@ const CollegePage = () => {
     { label: 'Lab', image: lab_image },
     { label: 'Library', image: library_image },
     { label: 'Hostel', image: hostel_image },
-    ...(other_images.length > 0
-      ? [{ label: 'Other Images', images: other_images.map(img => img.image) }]
-      : []),
+    ...(other_images.length > 0 ? [{ label: 'Other Images', images: other_images.map(img => img.image) }] : []),
   ].filter(section => section.image || section.images);
 
-  const storedBackgroundImage = localStorage.getItem('subcategoryBackgroundImage');
-
   return (
-    <div className="pt-20">
-      <div className="p-8 relative min-h-screen">
-        <div
-          className={`fixed inset-0 bg-cover bg-center blur-sm transition-all duration-1000 ease-in-out ${
-            backgroundVisible ? 'opacity-100' : 'opacity-0'
-          }`}
-          style={{
-            backgroundImage: `url(${storedBackgroundImage || placeholderImagePath})`,
-          }}
-        />
-        <div className="fixed top-6 right-6 z-0">
-          <img src={likedicon} alt="Liked" className="h-20 w-auto" />
-        </div>
-        <div className="relative z-10 flex items-center justify-center">
-          {contentVisible ? (
-            <div className="max-w-4xl w-full bg-white shadow-xl rounded-lg overflow-hidden">
-              {main_image && (
-                <div className="flex justify-center">
-                  <img
-                    src={main_image}
-                    alt={`Main image for ${name}`}
-                    className="w-full max-h-96 object-cover cursor-pointer rounded-md"
-                    onClick={() => handleImageClick(main_image)}
-                  />
-                </div>
-              )}
-              <div className="p-6">
-                {name && <h1 className="text-4xl font-bold mb-4 text-center">{name}</h1>}
+    <div className="min-h-screen bg-gray-100">
+      <div className="container mx-auto px-4 py-8">
+        <div className="bg-white shadow-xl rounded-lg overflow-hidden">
+          <div className="relative h-[300px] md:h-[400px] lg:h-[500px]">
+            <img
+              src={main_image || nocollegeimage}
+              alt={`Main image for ${name}`}
+              className="w-full h-full object-cover object-center cursor-pointer"
+              onClick={() => handleImageClick(main_image || nocollegeimage)}
+            />
+            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-end">
+              <div className="p-6 w-full">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2">{name}</h1>
                 <div className="flex justify-between items-center">
-                  {courses && (
-                    <p className="mb-2 text-lg">
-                      <span className="font-semibold">Courses:</span> {courses}
-                    </p>
-                  )}
-                  <img
-                    src={isLiked ? likedicon : notlikedicon}
-                    alt={isLiked ? 'Liked' : 'Not liked'}
-                    className="h-6 w-6 cursor-pointer"
-                    onClick={handleLikeClick}
-                  />
-                </div>
-                {priority && (
-                  <p className="mb-2 text-lg">
-                    <span className="font-semibold">Priority:</span> {priority}
-                  </p>
-                )}
-                {category && (
-                  <p className="mb-2 text-lg">
-                    <span className="font-semibold">Category:</span> {category}
-                  </p>
-                )}
-                {parent_subcategory && (
-                  <p className="mb-2 text-lg">
-                    <span className="font-semibold">Parent Subcategory:</span> {parent_subcategory}
-                  </p>
-                )}
-                <div className="mt-4">
-                  {imageSections.map((section, index) => (
-                    <div key={index} className="mb-6">
-                      {section.label && (
-                        <h2 className="text-xl font-semibold mb-2">{section.label}</h2>
-                      )}
-                      {section.image && (
-                        <div className="flex justify-center p-4 border-b">
-                          <img
-                            src={section.image}
-                            alt={section.label}
-                            className="w-3/4 max-h-64 object-cover cursor-pointer rounded-md transition-transform transform hover:scale-105"
-                            onClick={() => handleImageClick(section.image)}
-                          />
-                        </div>
-                      )}
-                      {section.images && (
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4">
-                          {section.images.map((image, idx) => (
-                            <div className="flex justify-center items-center" key={idx}>
-                              <img
-                                src={image}
-                                alt={`Other image ${idx + 1}`}
-                                className="max-h-64 object-cover cursor-pointer rounded-sm transition-transform transform hover:scale-105"
-                                onClick={() => handleImageClick(image)}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                  <p className="text-lg text-white">{category} | {parent_subcategory}</p>
+                  <div className="relative">
+                    <img
+                      src={isLiked ? likedicon : notlikedicon}
+                      alt={isLiked ? 'Liked' : 'Not liked'}
+                      className="h-10 w-10 cursor-pointer bg-white rounded-full p-2 shadow-lg transition-transform transform hover:scale-110"
+                      onClick={handleLikeClick}
+                    />
+                    {showLikeMessage && (
+                      <div className="absolute right-full mr-2 top-1/2 transform -translate-y-1/2 px-3 py-2 bg-gray-800 text-white text-sm rounded-lg whitespace-nowrap">
+                        Like this college
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center min-h-screen">
-              <img src={backlogo} alt="Loading..." className="h-20 w-auto mb-4 animate-pulse" />
-              <p className="text-center text-2xl font-semibold text-white animate-pulse">Loading...</p>
+          </div>
+          
+          <div className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              <div>
+                <h2 className="text-xl font-semibold mb-2">Courses</h2>
+                <p className="text-gray-700">{courses}</p>
+              </div>
+              {/* <div>
+                <h2 className="text-xl font-semibold mb-2">Priority</h2>
+                <p className="text-gray-700">{priority}</p>
+              </div> */}
             </div>
-          )}
+
+            <div className="space-y-8">
+              {imageSections.map((section, index) => (
+                <div key={index} className="border-t pt-6">
+                  <h2 className="text-2xl font-semibold mb-4 text-gray-800">{section.label}</h2>
+                  {section.image && (
+                    <div className="flex justify-center">
+                      <img
+                        src={section.image}
+                        alt={section.label}
+                        className="w-full max-w-3xl object-cover cursor-pointer rounded-lg shadow-md transition-transform transform hover:scale-105"
+                        onClick={() => handleImageClick(section.image)}
+                      />
+                    </div>
+                  )}
+                  {section.images && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {section.images.map((image, idx) => (
+                        <div key={idx} className="flex justify-center">
+                          <img
+                            src={image}
+                            alt={`Other image ${idx + 1}`}
+                            className="w-full h-64 object-cover cursor-pointer rounded-lg shadow-md transition-transform transform hover:scale-105"
+                            onClick={() => handleImageClick(image)}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
       {modalImage && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-          <div className="relative max-w-5xl w-full p-4">
+          <div className="relative w-full max-w-7xl">
             <button
-              className="absolute top-2 right-2 text-white text-2xl"
+              className="absolute top-4 right-4 text-white text-4xl hover:text-gray-300 transition-colors z-10 bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center"
               onClick={handleCloseModal}
             >
               &times;
             </button>
             <img
               src={modalImage}
-              alt="Modal view"
-              className="w-full h-full object-contain rounded-lg"
+              alt="Full view"
+              className="w-full max-h-[75vh] object-contain"
             />
           </div>
         </div>
@@ -240,16 +191,6 @@ const CollegePage = () => {
 };
 
 export default CollegePage;
-
-
-
-
-
-
-
-
-
-
 
 
 

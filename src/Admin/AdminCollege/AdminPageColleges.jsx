@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import EditCollegeDetails from './EditCollegeDetails';
+import { useSelector } from 'react-redux';
 
 const AdminPageColleges = () => {
   const [subcategories, setSubcategories] = useState([]);
@@ -8,6 +9,7 @@ const AdminPageColleges = () => {
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
   const [selectedCollege, setSelectedCollege] = useState(null);
   const [loading, setLoading] = useState(false);
+  const accessToken = useSelector(state => state.user.access);
 
   useEffect(() => {
     fetchSubcategories();

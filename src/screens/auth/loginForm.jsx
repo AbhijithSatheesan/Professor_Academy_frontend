@@ -76,8 +76,11 @@ function LoginForm() {
           >
             Login
           </button>
-          <button>
-            <Link to='/passwordreset' >Reset Password</Link>
+          <button 
+          >
+            <Link to='/passwordreset' 
+            className='text-blue-500'
+            >Forgot password ?</Link>
           </button>
         </form>
       </div>

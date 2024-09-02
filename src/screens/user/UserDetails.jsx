@@ -229,25 +229,31 @@ const UserDetails = () => {
 
       {/* Logout confirmation modal */}
       {showLogoutConfirm && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
-          <div className="bg-white p-5 rounded-lg shadow-xl">
-            <h2 className="text-xl font-bold mb-4">Confirm Logout</h2>
-            <p className="mb-4">Are you sure you want to logout?</p>
-            <div className="flex justify-end">
-              <button 
-                className="bg-blue-300 hover:bg-blue-400 text-black font-bold py-2 px-4 rounded mr-2"
-                onClick={handleLogoutCancel}
-              >
-                Cancel
-              </button>
-              <button
-              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mr-2">
-              <UserLogout onConfirm={handleLogoutConfirm} />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+  <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+    <div className="bg-white p-5 rounded-lg shadow-xl">
+      <h2 className="text-xl font-bold mb-4">Confirm Logout</h2>
+      <p className="mb-4">Are you sure you want to logout?</p>
+      <div className="flex justify-end">
+        <button 
+          className="bg-blue-300 hover:bg-blue-400 text-black font-bold py-2 px-4 rounded mr-2"
+          onClick={handleLogoutCancel}
+        >
+          Cancel
+        </button>
+        <UserLogout onConfirm={handleLogoutConfirm}>
+          {(logout) => (
+            <button
+              onClick={logout}
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mr-2"
+            >
+              Logout
+            </button>
+          )}
+        </UserLogout>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };

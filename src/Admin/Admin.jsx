@@ -14,7 +14,7 @@ const Admin = () => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    if (user.admission_placed === 113) {
+    if (user.admission_placed === 113800) {
       setIsAdmin(true);
     } else {
       console.log('Access denied. User is not an admin.');

@@ -17,3 +17,17 @@ Currently, two official plugins are available:
 * added login option in frontend, need to style it
 * created redux store, added login auth to redux but not stored
 * add image of category as the background of the subcategories page
+
+
+-> check the authorization related to college app 
+-> style available courses
+-> environment variables  (done)
+-> promt message in edit college
+-> image rendering in college list page
+
+-> other images not loading in edit college
+
+
+
+
+### load the message in claude on firefox
