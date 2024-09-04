@@ -30,7 +30,7 @@ const FOOTER_HEIGHT = '3rem';
 
 const RequireAuth = ({ children }) => {
   const authenticated = useSelector(state => state.user?.authenticated);
-  return authenticated === 'True' ? children : <Navigate to="/login" />;
+  return authenticated === 'True' ? children : <Navigate to="/home" />;
 };
 
 // Updated NotFound component without auto-redirect
