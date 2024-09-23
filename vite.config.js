@@ -56,26 +56,62 @@
 // for development using environment variables
 
 
+// import { defineConfig } from 'vite';
+// import react from '@vitejs/plugin-react';
+// import dotenv from 'dotenv';
+
+// // Load environment variables from .env file
+// dotenv.config();
+
+// export default defineConfig({
+//   plugins: [react()],
+//   server: {
+//     proxy: {
+//       '/api': {
+//         target: process.env.VITE_API_URL || 'http://127.0.0.1:8000/',
+//         changeOrigin: true,
+//         rewrite: (path) => path.replace(/^\/api/, ''),
+//       },
+//       '/images': {
+//         target: process.env.VITE_IMAGE_URL || 'http://127.0.0.1:8000/',
+//         changeOrigin: true,
+//       },
+//     },
+//   },
+// });
+
+
+
+
+
+
+
+
+
+
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import dotenv from 'dotenv';
 
-// Load environment variables from .env file
-dotenv.config();
+const BACKEND_URL = 'http://127.0.0.1:8000/';
 
 export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
       '/api': {
-        target: process.env.VITE_API_URL || 'https://itsmeabhijith.shop',
+        target: `${BACKEND_URL}/api`,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
       '/images': {
-        target: process.env.VITE_IMAGE_URL || 'https://itsmeabhijith.shop',
+        target: BACKEND_URL,
         changeOrigin: true,
       },
     },
   },
 });
+
+
+
+
+
