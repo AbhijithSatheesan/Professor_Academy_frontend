@@ -92,7 +92,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-const BACKEND_URL = 'http://127.0.0.1:8000/';
+const BACKEND_URL = 'https://itsmeabhijith.shop/';
 
 export default defineConfig({
   plugins: [react()],
