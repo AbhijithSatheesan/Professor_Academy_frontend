@@ -1,50 +1,32 @@
 // import { defineConfig } from 'vite';
 // import react from '@vitejs/plugin-react';
 
-// const BACKEND_URL = 'https://itsmeabhijith.shop';
+// const isProduction = true; // Hardcoded as true for production the same exists in viteconfig file
 
-// export default defineConfig({
-//   plugins: [react()],
-//   server: {
-//     proxy: {
-//       '/api': {
-//         target: `${BACKEND_URL}/api`,
-//         changeOrigin: true,
-//         rewrite: (path) => path.replace(/^\/api/, ''),
-//       },
-//       '/images': {
-//         target: BACKEND_URL,
-//         changeOrigin: true,
-//       },
+// export default defineConfig(() => {
+//   const productionBaseURL = 'https://itsmeabhijith.shop';
+
+//   return {
+//     plugins: [react()],
+//     server: {
+//       proxy: isProduction
+//         ? {} // No proxy in production
+//         : {
+//             '/api': {
+//               target: `${productionBaseURL}/api`,
+//               changeOrigin: true,
+//               rewrite: (path) => path.replace(/^\/api/, ''),
+//             },
+//             '/images': {
+//               target: productionBaseURL,
+//               changeOrigin: true,
+//             },
+//           },
 //     },
-//   },
-// });
-
-
-
-
-
-
-// // for development
-// // vite.config.js
-// import { defineConfig } from 'vite';
-// import react from '@vitejs/plugin-react';
-
-// export default defineConfig({
-//   plugins: [react()],
-//   server: {
-//     proxy: {
-//       '/api': {
-//         target: 'https://itsmeabhijith.shop',
-//         changeOrigin: true,
-//         rewrite: (path) => path.replace(/^\/api/, ''),
-//       },
-//       '/images': {
-//         target: 'https://itsmeabhijith.shop',
-//         changeOrigin: true,
-//       },
+//     define: {
+//       'import.meta.env.PROD': JSON.stringify(isProduction), // Hardcoded
 //     },
-//   },
+//   };
 // });
 
 
@@ -53,32 +35,17 @@
 
 
 
-// for development using environment variables
 
 
-// import { defineConfig } from 'vite';
-// import react from '@vitejs/plugin-react';
-// import dotenv from 'dotenv';
 
-// // Load environment variables from .env file
-// dotenv.config();
 
-// export default defineConfig({
-//   plugins: [react()],
-//   server: {
-//     proxy: {
-//       '/api': {
-//         target: process.env.VITE_API_URL || 'http://127.0.0.1:8000/',
-//         changeOrigin: true,
-//         rewrite: (path) => path.replace(/^\/api/, ''),
-//       },
-//       '/images': {
-//         target: process.env.VITE_IMAGE_URL || 'http://127.0.0.1:8000/',
-//         changeOrigin: true,
-//       },
-//     },
-//   },
-// });
+
+
+
+
+
+
+
 
 
 
@@ -123,7 +90,7 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ mode }) => {
-  // Load env file based on the mode ('development' or 'production')
+  
   const env = loadEnv(mode, process.cwd());
 
   return {
@@ -136,7 +103,7 @@ export default defineConfig(({ mode }) => {
           rewrite: (path) => path.replace(/^\/api/, ''),
         },
         '/images': {
-          target: env.VITE_IMAGE_URL,
+          target: env.VITE_API_URL,
           changeOrigin: true,
         },
       },
