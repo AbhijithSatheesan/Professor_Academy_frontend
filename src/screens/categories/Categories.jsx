@@ -12,7 +12,7 @@ function Categories() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get('/api/colleges/categories'); // Using the axios instance
+        const response = await api.get('api/colleges/categories'); // Using the axios instance
         setData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
