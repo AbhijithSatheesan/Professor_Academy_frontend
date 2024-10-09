@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import backlogo from '../../assets/professor.png';
-const placeholderImagePath = '../../assets/no_image.png'; // Adjust path
+import placeholderImagePath from '../../assets/no_image.png'; // Adjusted the path for importing the placeholder image
+import api from '../../../api'; // Assuming you've set up the custom axios instance
 
 function Categories() {
   const [data, setData] = useState(null);
@@ -9,10 +10,16 @@ function Categories() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('/api/colleges/categories') // Relative URL
-      .then(response => response.json())
-      .then(jsonData => setData(jsonData))
-      .catch(error => console.error('Error fetching data:', error));
+    const fetchData = async () => {
+      try {
+        const response = await api.get('/api/colleges/categories'); // Using the axios instance
+        setData(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
 
     // Move the logo to the background after 3 seconds
     const timeout = setTimeout(() => {
@@ -42,7 +49,11 @@ function Categories() {
           backgroundSize: logoOnTop ? '400px' : '200px',
         }}
       />
-      <div className={`relative z-10 ${logoOnTop ? 'opacity-0' : 'opacity-100'} transition-opacity duration-1000 ease-in-out`}>
+      <div
+        className={`relative z-10 ${
+          logoOnTop ? 'opacity-0' : 'opacity-100'
+        } transition-opacity duration-1000 ease-in-out`}
+      >
         <h1 className="text-4xl font-bold mb-4 text-white">Categories</h1>
         {data ? (
           <ul className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
@@ -51,14 +62,14 @@ function Categories() {
                 key={index}
                 className="aspect-auto bg-white shadow-md rounded-sm overflow-hidden transition-transform hover:scale-105 duration-300 cursor-pointer"
                 onClick={() => handleCategoryClick(item.id)}
-                style={{ minHeight: '200px' }} // Add this line
+                style={{ minHeight: '200px' }} // Ensures a minimum height for each list item
               >
                 <div className="w-full h-4/5">
                   <img
                     src={item.image}
                     alt={`Category Image for ${item.name}`}
                     onError={(event) => {
-                      event.target.src = placeholderImagePath;
+                      event.target.src = placeholderImagePath; // Fallback image
                     }}
                     className="object-cover w-full h-full"
                   />
