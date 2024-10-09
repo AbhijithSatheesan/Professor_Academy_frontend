@@ -1,33 +1,36 @@
-// import { defineConfig } from 'vite';
-// import react from '@vitejs/plugin-react';
 
-// const isProduction = true; // Hardcoded as true for production the same exists in viteconfig file
+// for api.js
 
-// export default defineConfig(() => {
-//   const productionBaseURL = 'https://itsmeabhijith.shop';
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-//   return {
-//     plugins: [react()],
-//     server: {
-//       proxy: isProduction
-//         ? {} // No proxy in production
-//         : {
-//             '/api': {
-//               target: `${productionBaseURL}/api`,
-//               changeOrigin: true,
-//               rewrite: (path) => path.replace(/^\/api/, ''),
-//             },
-//             '/images': {
-//               target: productionBaseURL,
-//               changeOrigin: true,
-//             },
-//           },
-//     },
-//     define: {
-//       'import.meta.env.PROD': JSON.stringify(isProduction), // Hardcoded
-//     },
-//   };
-// });
+const isProduction = true; // Hardcoded as true for production the same exists in viteconfig file
+
+export default defineConfig(() => {
+  const productionBaseURL = 'https://itsmeabhijith.shop';
+
+  return {
+    plugins: [react()],
+    server: {
+      proxy: isProduction
+        ? {} // No proxy in production
+        : {
+            '/api': {
+              target: `${productionBaseURL}/api`,
+              changeOrigin: true,
+              rewrite: (path) => path.replace(/^\/api/, ''),
+            },
+            '/images': {
+              target: productionBaseURL,
+              changeOrigin: true,
+            },
+          },
+    },
+    define: {
+      'import.meta.env.PROD': JSON.stringify(isProduction), // Hardcoded
+    },
+  };
+});
 
 
 
@@ -86,27 +89,27 @@
 // https://itsmeabhijith.shop/
 
 
-import { defineConfig, loadEnv } from 'vite';
-import react from '@vitejs/plugin-react';
+// import { defineConfig, loadEnv } from 'vite';
+// import react from '@vitejs/plugin-react';
 
-export default defineConfig(({ mode }) => {
+// export default defineConfig(({ mode }) => {
   
-  const env = loadEnv(mode, process.cwd());
+//   const env = loadEnv(mode, process.cwd());
 
-  return {
-    plugins: [react()],
-    server: {
-      proxy: {
-        '/api': {
-          target: `${env.VITE_API_URL}/api`,
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ''),
-        },
-        '/images': {
-          target: env.VITE_API_URL,
-          changeOrigin: true,
-        },
-      },
-    },
-  };
-});
+//   return {
+//     plugins: [react()],
+//     server: {
+//       proxy: {
+//         '/api': {
+//           target: `${env.VITE_API_URL}/api`,
+//           changeOrigin: true,
+//           rewrite: (path) => path.replace(/^\/api/, ''),
+//         },
+//         '/images': {
+//           target: env.VITE_API_URL,
+//           changeOrigin: true,
+//         },
+//       },
+//     },
+//   };
+// });
