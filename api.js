@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const isProduction = true; // Hardcoded as true for production the same exists in viteconfig file
-const productionBaseURL = 'http://127.0.0.1:8000/'; // Replace with your production API URL
+const productionBaseURL = 'https://itsmeabhijith.shop/'; // Replace with your production API URL
 
 const api = axios.create({
   baseURL: isProduction ? productionBaseURL : '', // Base URL only in production
