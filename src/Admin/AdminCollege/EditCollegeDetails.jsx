@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import axios from 'axios';
 import api, { getFullURL } from '../../../api';
+
+// Add CSRF token configuration
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 const Modal = ({ isOpen, onClose, message }) => {
   if (!isOpen) return null;
@@ -61,6 +66,8 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
       setCollege(response.data);
     } catch (error) {
       console.error('Error fetching college details:', error);
+      setMessage('Failed to fetch college details');
+      setIsMessageModalOpen(true);
     } finally {
       setLoading(false);
     }
@@ -74,6 +81,8 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
       setSubcategories(response.data);
     } catch (error) {
       console.error('Error fetching subcategories:', error);
+      setMessage('Failed to fetch subcategories');
+      setIsMessageModalOpen(true);
     }
   };
 
@@ -150,8 +159,10 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
       const response = await api.put(`/api/colleges/updatecollege/${collegeId}/`, formData, {
         headers: { 
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${accessToken}`
-        }
+          Authorization: `Bearer ${accessToken}`,
+          'X-CSRFToken': axios.defaults.xsrfHeaderName // Include CSRF token in the request
+        },
+        withCredentials: true // This ensures that cookies are sent with the request
       });
       console.log('Response:', response.data);
       setMessage('College updated successfully!');
@@ -159,8 +170,16 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
       fetchCollegeDetails();
       setNewOtherImages([]);
     } catch (error) {
-      console.error('Error updating college:', error.response?.data || error.message);
-      setMessage('Failed to update college: ' + (error.response?.data?.detail || error.message));
+      console.error('Error updating college:', error);
+      let errorMessage = 'Failed to update college';
+      if (error.response) {
+        errorMessage += `: ${error.response.data.detail || JSON.stringify(error.response.data)}`;
+      } else if (error.request) {
+        errorMessage += ': No response received from server';
+      } else {
+        errorMessage += `: ${error.message}`;
+      }
+      setMessage(errorMessage);
       setIsMessageModalOpen(true);
     } finally {
       setIsUpdateModalOpen(false);
