@@ -140,7 +140,7 @@ const Header = () => {
           <div className="flex flex-col items-center space-x-2 p-4">
             <Link to="/myprofile" onClick={handleNavItemClick} className="hover:text-gray-400">
               <img
-                src={image || defaultprofile}
+                src={image ? getFullURL(image) : defaultprofile}
                 alt="User"
                 className="rounded-full w-8 h-8 object-cover"
               />
