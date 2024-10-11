@@ -31,8 +31,8 @@ const AddCollege = () => {
     const fetchData = async () => {
       try {
         const [categoriesResponse, subcategoriesResponse] = await Promise.all([
-          axios.get('/api/colleges/categories'),
-          axios.get('/api/colleges/subcategories')
+          api.get('/api/colleges/categories'),
+          api.get('/api/colleges/subcategories')
         ]);
         setCategories(categoriesResponse.data);
         setSubcategories(subcategoriesResponse.data);
@@ -75,7 +75,7 @@ const AddCollege = () => {
     if (showNewCategoryInput && formData.newCategory) {
       //  new category is of no use here
       try {
-        const newCategoryResponse = await axios.post('/api/add-category/', { name: formData.newCategory });  
+        const newCategoryResponse = await api.post('/api/add-category/', { name: formData.newCategory });  
         submitData.append('category', newCategoryResponse.data.id);
       } catch (error) {
         console.error('Error adding new category:', error);
@@ -101,7 +101,7 @@ const AddCollege = () => {
     });
 
     try {
-      const response = await axios.post('/api/colleges/addcollege', submitData, {
+      const response = await api.post('/api/colleges/addcollege', submitData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${accessToken}`

@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import backlogo from '../../assets/professor.png';
 import CollegeCard from '../../components/CollegeCard/CollegeCard';
+import api from '../../../api';
+import { getFullURL } from '../../../api';
 
 const SearchComponent = () => {
   const [searchResults, setSearchResults] = useState([]);
@@ -23,7 +25,7 @@ const SearchComponent = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`/api/colleges/searchcollege?query=${encodeURIComponent(query)}`);
+      const response = await api.get(`/api/colleges/searchcollege?query=${encodeURIComponent(query)}`);
       setSearchResults(response.data);
       setLoading(false);
 

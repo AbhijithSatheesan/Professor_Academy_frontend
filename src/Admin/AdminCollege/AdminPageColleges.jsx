@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import EditCollegeDetails from './EditCollegeDetails';
 import { useSelector } from 'react-redux';
+import api from '../../../api';
+import { getFullURL } from '../../../api';
 
 const AdminPageColleges = () => {
   const [subcategories, setSubcategories] = useState([]);
@@ -24,7 +26,7 @@ const AdminPageColleges = () => {
   const fetchSubcategories = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('/api/colleges/subcategories');
+      const response = await api.get('/api/colleges/subcategories');
       setSubcategories(response.data);
     } catch (error) {
       console.error('Error fetching subcategories:', error);
@@ -36,7 +38,7 @@ const AdminPageColleges = () => {
   const fetchColleges = async (subCategory) => {
     setLoading(true);
     try {
-      const response = await axios.get(`/api/colleges/subcategory/${subCategory.id}/colleges/`);
+      const response = await api.get(`/api/colleges/subcategory/${subCategory.id}/colleges/`);
       setColleges(response.data);
     } catch (error) {
       console.error('Error fetching colleges:', error);
@@ -88,9 +90,9 @@ const AdminPageColleges = () => {
                   className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300 cursor-pointer"
                   onClick={() => setSelectedCollege(college)}
                 >
-                  {college.main_image && (
+                  {getFullURL(college.main_image) && (
                     <img
-                      src={college.main_image}
+                      src={getFullURL(college.main_image)}
                       alt={college.name}
                       className="w-full h-48 object-cover"
                     />

@@ -73,7 +73,7 @@ function CollegeList() {
           backgroundVisible ? 'opacity-100' : 'opacity-0'
         }`}
         style={{
-          backgroundImage: `url(${storedBackgroundImage})`,
+          backgroundImage: `url(${getFullURL(storedBackgroundImage) || placeholderImagePath})`,
         }}
       />
       <div className="fixed top-24 right-6 z-0">
@@ -83,7 +83,7 @@ function CollegeList() {
         {collegesVisible ? (
           <ul className="flex flex-col w-full max-w-4xl space-y-4">
             {sortedData.map((item, index) => {
-              const imageUrl = item.main_image ? getFullURL(item.main_image) : null;
+              const imageUrl = item.main_image ? item.main_image : null;
               
               return (
                 <CollegeCard

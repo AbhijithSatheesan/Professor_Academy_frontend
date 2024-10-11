@@ -84,11 +84,11 @@ const CollegePage = () => {
   const isLiked = markedCollegeIds.includes(id);
 
   const imageSections = [
-    { label: 'Classroom', image: class_image },
-    { label: 'Lab', image: lab_image },
-    { label: 'Library', image: library_image },
-    { label: 'Hostel', image: hostel_image },
-    ...(other_images.length > 0 ? [{ label: 'Other Images', images: other_images.map(img => img.image) }] : []),
+    { label: 'Classroom', image: getFullURL(class_image) },
+    { label: 'Lab', image: getFullURL(lab_image) },
+    { label: 'Library', image: getFullURL(library_image) },
+    { label: 'Hostel', image: getFullURL(hostel_image) },
+    ...(other_images.length > 0 ? [{ label: 'Other Images', images: other_images.map(img => getFullURL(img.image)) }] : []),
   ].filter(section => section.image || section.images);
 
   return (

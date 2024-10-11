@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import api from '../../../api';
 
 const AdminEditUsers = () => {
   const [user, setUser] = useState(null);
@@ -16,7 +17,7 @@ const AdminEditUsers = () => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get(`/api/users/admin-users/${id}/`, {
+      const response = await api.get(`/api/users/admin-users/${id}/`, {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
       setUser(response.data);
@@ -32,7 +33,7 @@ const AdminEditUsers = () => {
   const handleDeleteUser = async () => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
-        await axios.delete(`/api/users/admin-users/${id}/`, {
+        await api.delete(`/api/users/admin-users/${id}/`, {
           headers: { Authorization: `Bearer ${accessToken}` }
         });
         handleBack();
@@ -44,7 +45,7 @@ const AdminEditUsers = () => {
 
   const handleUpdateUser = async (updatedData) => {
     try {
-      await axios.patch(`/api/users/admin-users/${id}/`, updatedData, {
+      await api.patch(`/api/users/admin-users/${id}/`, updatedData, {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
       fetchUser();
@@ -64,7 +65,7 @@ const AdminEditUsers = () => {
     };
     console.log('Updating college with data:', data);
     try {
-      await axios.put(`/api/users/admin-users/${id}/update-marked-college/`, data, {
+      await api.put(`/api/users/admin-users/${id}/update-marked-college/`, data, {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
       fetchUser();

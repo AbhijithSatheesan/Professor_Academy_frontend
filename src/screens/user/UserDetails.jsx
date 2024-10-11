@@ -7,6 +7,8 @@ import locationIcon from '../../assets/location-icon.png';
 import { FaUniversity, FaMoneyBillAlt, FaSignOutAlt, FaArrowLeft, FaUserShield } from 'react-icons/fa';
 import backlogo from '../../assets/professor.png';
 import UserLogout from '../auth/UserLogout';
+import api from '../../../api';
+import { getFullURL } from '../../../api';
 
 const UserDetails = () => {
   const user = useSelector(state => state.user);
@@ -50,7 +52,7 @@ const UserDetails = () => {
           return;
         }
 
-        const response = await axios.get(`/api/users/profile/${user_id}/`, {
+        const response = await api.get(`/api/users/profile/${user_id}/`, {
           headers: {
             'Authorization': `Bearer ${access}`
           }
@@ -121,7 +123,7 @@ const UserDetails = () => {
         <div className="flex flex-row items-center mb-4">
           {image && (
             <img
-              src={image}
+              src={getFullURL(image)}
               alt={user_name}
               className="rounded-full w-16 h-16 object-cover mr-4 md:w-16 md:h-16"
             />
@@ -192,7 +194,7 @@ const UserDetails = () => {
               >
                 <div className="relative md:w-48 md:h-48">
                   <img
-                    src={college.main_image || placeholderImagePath}
+                    src={getFullURL(college.main_image) || placeholderImagePath}
                     alt={college.college_name}
                     className="w-full md:w-48 md:h-48 object-cover"
                   />

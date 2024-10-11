@@ -2,6 +2,7 @@ import React from 'react';
 import nocollegeimage from '../../assets/collegeicon.png';
 import locationIcon from '../../assets/location-icon.png';
 import { useSelector } from 'react-redux';
+import { getFullURL } from '../../../api';
 
 function CollegeCard({ collegeData, onCollegeClick }) {
   const markedCollegeIds = useSelector(state => state.user?.marked_college_ids || []);
@@ -18,7 +19,7 @@ function CollegeCard({ collegeData, onCollegeClick }) {
       <div className="flex flex-col sm:flex-row">
         <div className="w-full sm:w-1/3 lg:w-1/4 h-48 sm:h-auto relative">
           <img
-            src={collegeData.main_image || nocollegeimage}
+            src={getFullURL(collegeData.main_image) || nocollegeimage}
             alt={`${collegeData.name}`}
             className="absolute inset-0 w-full h-full object-cover"
             onError={(e) => {

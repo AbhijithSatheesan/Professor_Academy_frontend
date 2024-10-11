@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useSelector } from 'react-redux';
-
-// Set up CSRF token handling for axios
-axios.defaults.xsrfCookieName = 'csrftoken';
-axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+import api, { getFullURL } from '../../../api';
 
 const Modal = ({ isOpen, onClose, message }) => {
   if (!isOpen) return null;
@@ -59,7 +55,7 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
 
   const fetchCollegeDetails = async () => {
     try {
-      const response = await axios.get(`/api/colleges/seecollegedetails/${collegeId}`, {
+      const response = await api.get(`/api/colleges/seecollegedetails/${collegeId}`, {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
       setCollege(response.data);
@@ -72,7 +68,7 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
 
   const fetchSubcategories = async () => {
     try {
-      const response = await axios.get('/api/colleges/subcategories', {
+      const response = await api.get('/api/colleges/subcategories', {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
       setSubcategories(response.data);
@@ -105,7 +101,7 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
 
   const confirmImageDelete = async () => {
     try {
-      await axios.delete(`/api/colleges/other-images/${imageToDelete}/`, {
+      await api.delete(`/api/colleges/other-images/${imageToDelete}/`, {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
       setCollege(prev => ({
@@ -151,7 +147,7 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
     });
 
     try {
-      const response = await axios.put(`/api/colleges/updatecollege/${collegeId}/`, formData, {
+      const response = await api.put(`/api/colleges/updatecollege/${collegeId}/`, formData, {
         headers: { 
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${accessToken}`
@@ -177,7 +173,7 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`/api/colleges/updatecollege/${collegeId}/`, {
+      await api.delete(`/api/colleges/updatecollege/${collegeId}/`, {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
       setMessage('College deleted successfully!');
@@ -263,7 +259,7 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
             <label className="block font-semibold mb-2">{imageField.replace('_', ' ').charAt(0).toUpperCase() + imageField.slice(1).replace('_', ' ')}:</label>
             {college[imageField] ? (
               <div className="flex items-center space-x-4">
-                <img src={college[imageField]} alt={imageField} className="w-32 h-32 object-cover rounded" />
+                <img src={getFullURL(college[imageField])} alt={imageField} className="w-32 h-32 object-cover rounded" />
                 <div className="space-y-2">
                   <button
                     type="button"
@@ -290,7 +286,7 @@ const EditCollegeDetails = ({ collegeId, onBack }) => {
           <div className="grid grid-cols-3 gap-4">
             {college.other_images && college.other_images.map(otherImage => (
               <div key={otherImage.id} className="relative">
-                <img src={otherImage.image} alt={`Other Image ${otherImage.id}`} className="w-full h-32 object-cover rounded" />
+                <img src={getFullURL(otherImage.image)} alt={`Other Image ${otherImage.id}`} className="w-full h-32 object-cover rounded" />
                 <button
                   type="button"
                   onClick={() => handleOtherImageDelete(otherImage.id)}

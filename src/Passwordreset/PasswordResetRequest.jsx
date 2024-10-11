@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import api from '../../api';
 
 const PasswordResetRequest = () => {
   const [email, setEmail] = useState('');
@@ -9,7 +10,7 @@ const PasswordResetRequest = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('api/users/password-reset/', { email });
+      const response = await api.post('api/users/password-reset/', { email });
       setMessage(response.data.message);
       setIsError(false);
     } catch (error) {

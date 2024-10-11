@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import api, { getFullURL } from '../../../api';
+
 
 const AdminPageUsers = () => {
   const [users, setUsers] = useState({ students: [], admins: [] });
@@ -19,7 +21,7 @@ const AdminPageUsers = () => {
   const fetchUsers = async (search = '') => {
     setLoading(true);
     try {
-      const response = await axios.get(`/api/users/userslist?search=${search}`, {
+      const response = await api.get(`/api/users/userslist?search=${search}`, {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
       setUsers(response.data);
@@ -78,7 +80,7 @@ const AdminPageUsers = () => {
                   <td className="py-4 px-6 whitespace-nowrap">{user.username}</td>
                   <td className="py-4 px-6 whitespace-nowrap">
                     {user.image ? (
-                      <img src={user.image} alt={user.username} className="w-10 h-10 rounded-full" />
+                      <img src={getFullURL(user.image)} alt={user.username} className="w-10 h-10 rounded-full" />
                     ) : (
                       <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
                         <span className="text-gray-500 text-xs">No image</span>

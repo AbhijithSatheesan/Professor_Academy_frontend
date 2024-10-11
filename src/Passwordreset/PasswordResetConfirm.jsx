@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import api from '../../api';
 
 const PasswordResetConfirm = () => {
     const { uid, token } = useParams();
@@ -16,7 +17,7 @@ const PasswordResetConfirm = () => {
         }
 
         try {
-            await axios.post(`/api/users/password-reset-confirm/${uid}/${token}/`, {
+            await api.post(`/api/users/password-reset-confirm/${uid}/${token}/`, {
                 password,
             });
             alert('Password reset successfully');

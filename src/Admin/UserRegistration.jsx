@@ -37,7 +37,7 @@ const UserRegistration = () => {
     });
 
     try {
-      const response = await axios.post('/api/users/adduser/', formDataToSend, {
+      const response = await api.post('/api/users/adduser/', formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${accessToken}`

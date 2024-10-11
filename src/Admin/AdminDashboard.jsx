@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import backlogo from '../assets/professor.png';
+import api from '../../api';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
@@ -12,7 +13,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await axios.get('/api/users/stats', {
+        const response = await api.get('/api/users/stats', {
           headers: { Authorization: `Bearer ${accessToken}` }
         });
         setStats(response.data);

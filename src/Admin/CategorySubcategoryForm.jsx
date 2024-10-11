@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import api from '../../api';
 
 const CategorySubcategoryForm = () => {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ const CategorySubcategoryForm = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('/api/colleges/categories', {
+      const response = await api.get('/api/colleges/categories', {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
       setCategories(response.data);
@@ -60,7 +61,7 @@ const CategorySubcategoryForm = () => {
     });
 
     try {
-      await axios.post('/api/colleges/addcategories', data, {
+      await api.post('/api/colleges/addcategories', data, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${accessToken}`
