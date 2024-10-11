@@ -27,7 +27,7 @@ function LoginForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await api.post('api/users/login/', {
+      const response = await api.post('/api/users/login/', {
         username,
         password,
       });
