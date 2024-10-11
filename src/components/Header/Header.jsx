@@ -5,6 +5,7 @@ import logo_professor from '../../assets/professor.png';
 import HamburgerMenu from 'react-hamburger-menu';
 import SearchComponent from '../Search/SearchComponent';
 import defaultprofile from '../../assets/noprofile.png';
+import { getFullURL } from '../../../api';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -73,9 +74,9 @@ const Header = () => {
           </ul>
         </nav>
         <div className="flex flex-col items-center mr-2 pr-6">
-          <Link to="/myprofile" className="hover:text-gray-400">
+         <Link to="/myprofile" className="hover:text-gray-400">
             <img
-              src={image || defaultprofile}
+              src={image ? getFullURL(image) : defaultprofile}
               alt="User"
               className="rounded-full w-8 h-8 object-cover"
             />
