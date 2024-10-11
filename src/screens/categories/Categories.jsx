@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import backlogo from '../../assets/professor.png';
 import placeholderImagePath from '../../assets/no_image.png'; // Adjusted the path for importing the placeholder image
 import api from '../../../api'; // Assuming you've set up the custom axios instance
+import BACKEND_URL from '../../../BackendUrl';
+import { getFullURL } from '../../../api';
 
 function Categories() {
   const [data, setData] = useState(null);
@@ -66,8 +68,8 @@ function Categories() {
               >
                 <div className="w-full h-4/5">
                   <img
-                    src={item.image}
-                    alt={`Category Image for ${item.name}`}
+                    src={getFullURL(item.image)}
+                    alt={`Category ${item.name}`}
                     onError={(event) => {
                       event.target.src = placeholderImagePath; // Fallback image
                     }}
