@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import placeholderImagePath from '../../assets/no_image.png';
 import backlogo from '../../assets/professor.png';
+import api from '../../../api'; // Assuming your custom Axios instance is imported from this path
+import { getFullURL } from '../../../api';
+
+
 
 function Subcategories() {
   const { categoryId } = useParams();
@@ -13,24 +17,22 @@ function Subcategories() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(`Fetching data for category ID: ${categoryId}`);
-    fetch(`/api/colleges/category/${categoryId}/subcategories/`)
-      .then(response => {
-        if (!response.ok) {
-          console.error(`Error: ${response.status} ${response.statusText}`);
-          return response.text().then(text => {
-            throw new Error(`Error ${response.status}: ${text}`);
-          });
-        }
-        return response.json();
-      })
-      .then(jsonData => {
+    const fetchData = async () => {
+      try {
+        console.log(`Fetching data for category ID: ${categoryId}`);
+        
+        // Using the axios instance 'api' to make the API call
+        const response = await api.get(`/api/colleges/category/${categoryId}/subcategories/`);
+        const jsonData = response.data;
+
         console.log('Data fetched successfully:', jsonData);
         setData(jsonData);
         setLoading(false);
+
         const imageUrl = jsonData.image || placeholderImagePath;
         localStorage.setItem('subcategoryBackgroundImage', imageUrl);
 
+        // Show background image and then subcategories with a delay for smooth appearance
         const showBackgroundTimeout = setTimeout(() => {
           setBackgroundVisible(true);
 
@@ -38,20 +40,18 @@ function Subcategories() {
             setSubcategoriesVisible(true);
           }, 500);
 
-          return () => {
-            clearTimeout(showSubcategoriesTimeout);
-          };
+          return () => clearTimeout(showSubcategoriesTimeout);
         }, 100);
 
-        return () => {
-          clearTimeout(showBackgroundTimeout);
-        };
-      })
-      .catch(error => {
+        return () => clearTimeout(showBackgroundTimeout);
+      } catch (error) {
         console.error('Error fetching data:', error);
         setError(error.message);
         setLoading(false);
-      });
+      }
+    };
+
+    fetchData();
   }, [categoryId]);
 
   if (loading) {
@@ -67,7 +67,7 @@ function Subcategories() {
     return <p className="text-center text-red-500">Error: {error}</p>;
   }
 
-  if (!data || data.length === 0) {
+  if (!data || !data.subcategories || data.subcategories.length === 0) {
     return <p className="text-center text-red-500">No data available</p>;
   }
 
@@ -77,19 +77,24 @@ function Subcategories() {
 
   return (
     <div className="p-8 relative min-h-screen">
+      {/* Background Image with Blur Effect */}
       <div
         className={`fixed inset-0 bg-cover bg-center blur-sm transition-all duration-1000 ease-in-out ${
           backgroundVisible ? 'opacity-100' : 'opacity-0'
         }`}
         style={{
-          backgroundImage: `url(${data.image || placeholderImagePath})`,
+          backgroundImage: `url(${data.image ? getFullURL(data.image)  : placeholderImagePath})`,
         }}
       />
+
+      {/* Backlogo Fixed in Corner */}
       <div className="fixed top-24 right-6 z-0">
         <img src={backlogo} alt="Backlogo" className="h-20 w-auto" />
       </div>
+
+      {/* Subcategories List */}
       <div className="relative z-10 flex flex-col items-center">
-        {subcategoriesVisible && data.subcategories ? (
+        {subcategoriesVisible ? (
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 mx-auto w-full max-w-7xl">
             {data.subcategories.map((item, index) => (
               <li
@@ -113,7 +118,6 @@ function Subcategories() {
 }
 
 export default Subcategories;
-
 
 
 
