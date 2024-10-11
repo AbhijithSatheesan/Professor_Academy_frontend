@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const isProduction = true; // Hardcoded as true for production
-const productionBaseURL = 'http://127.0.0.1:8000/'; // Your production API URL
+const productionBaseURL = 'https://itsmeabhijith.shop/'; // Your production API URL
 
 export const getFullURL = (path) => {
   return isProduction ? `${productionBaseURL}${path}` : path;
