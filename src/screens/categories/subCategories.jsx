@@ -19,13 +19,13 @@ function Subcategories() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(`Fetching data for category ID: ${categoryId}`);
+        
         
         // Using the axios instance 'api' to make the API call
         const response = await api.get(`/api/colleges/category/${categoryId}/subcategories/`);
         const jsonData = response.data;
 
-        console.log('Data fetched successfully:', jsonData);
+        
         setData(jsonData);
         setLoading(false);
 

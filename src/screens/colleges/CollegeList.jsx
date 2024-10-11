@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import placeholderImagePath from '../../assets/no_image.png';
 import backlogo from '../../assets/professor.png';
-import nocollegeimage from '../../assets/collegeicon.png'
 import CollegeCard from '../../components/CollegeCard/CollegeCard';
+import api, { getFullURL } from '../../../api'; // Custom Axios instance and utility function
 
 function CollegeList() {
   const { subCategoryId } = useParams();
@@ -17,47 +17,30 @@ function CollegeList() {
   const storedBackgroundImage = localStorage.getItem('subcategoryBackgroundImage') || placeholderImagePath;
 
   useEffect(() => {
-    console.log(`Fetching data for subcategory ID: ${subCategoryId}`);
-    fetch(`/api/colleges/subcategory/${subCategoryId}/colleges/`)
-      .then(response => {
-        if (!response.ok) {
-          console.error(`ERROR: ${response.status} ${response.statusText}`);
-          return response.text().then(text => {
-            throw new Error(`Error ${response.status}: ${text}`);
-          });
-        }
-        return response.json();
-      })
-      .then(jsonData => {
-        console.log('Data fetched successfully', jsonData);
-        setData(jsonData);
+    const fetchData = async () => {
+      try {
+        
+        const response = await api.get(`/api/colleges/subcategory/${subCategoryId}/colleges/`);
+        setData(response.data);
         setLoading(false);
 
-        // Show the background image after 300ms  
         const showBackgroundTimeout = setTimeout(() => {
           setBackgroundVisible(true);
-
-          // Show the colleges after the background image is visible
           const showCollegesTimeout = setTimeout(() => {
             setCollegesVisible(true);
           }, 500);
-
-          // Clean up the timeout on component unmount
-          return () => {
-            clearTimeout(showCollegesTimeout);
-          };
+          return () => clearTimeout(showCollegesTimeout);
         }, 100);
 
-        // Clean up the timeout on component unmount
-        return () => {
-          clearTimeout(showBackgroundTimeout);
-        };
-      })
-      .catch(error => {
-        console.error('error fetching data:', error);
+        return () => clearTimeout(showBackgroundTimeout);
+      } catch (error) {
+        console.error('Error fetching data:', error);
         setError(error.message);
         setLoading(false);
-      });
+      }
+    };
+
+    fetchData();
   }, [subCategoryId]);
 
   if (loading) {
@@ -99,13 +82,17 @@ function CollegeList() {
       <div className="relative z-10 flex flex-col items-center">
         {collegesVisible ? (
           <ul className="flex flex-col w-full max-w-4xl space-y-4">
-            {sortedData.map((item, index) => (
-              <CollegeCard
-                key={index}
-                collegeData={item}
-                onCollegeClick={handleCollegeClick}
-              />
-            ))}
+            {sortedData.map((item, index) => {
+              const imageUrl = item.main_image ? getFullURL(item.main_image) : null;
+              
+              return (
+                <CollegeCard
+                  key={index}
+                  collegeData={{...item, main_image: imageUrl}}
+                  onCollegeClick={handleCollegeClick}
+                />
+              );
+            })}
           </ul>
         ) : (
           <p className="text-center text-white animate-pulse">Loading...</p>
@@ -116,7 +103,6 @@ function CollegeList() {
 }
 
 export default CollegeList;
-
 
 
 

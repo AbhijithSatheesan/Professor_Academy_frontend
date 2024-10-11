@@ -7,6 +7,9 @@ import axios from 'axios';
 import { updateMarkedCollegeIds } from '../../utils/userSlice';
 import backlogo from '../../assets/professor.png';
 import nocollegeimage from '../../assets/collegeicon.png'
+import api from '../../../api';
+import { getFullURL } from '../../../api';
+
 
 const CollegePage = () => {
   const { collegeId } = useParams();
@@ -22,7 +25,7 @@ const CollegePage = () => {
   useEffect(() => {
     const fetchCollegeData = async () => {
       try {
-        const response = await axios.get(`/api/colleges/seecollegedetails/${collegeId}`);
+        const response = await api.get(`/api/colleges/seecollegedetails/${collegeId}`);
         setCollegeData(response.data);
       } catch (error) {
         console.error('Error fetching college data:', error);
@@ -67,7 +70,7 @@ const CollegePage = () => {
 
   const handleLikeClick = async () => {
     try {
-      await axios.post(
+      await api.post(
         '/api/users/markcollege/',
         { user_id: userId, college_id: id, fee: 0 },
         { headers: { Authorization: `Bearer ${accessToken}` } }
@@ -94,8 +97,9 @@ const CollegePage = () => {
         <div className="bg-white shadow-xl rounded-lg overflow-hidden">
           <div className="relative h-[300px] md:h-[400px] lg:h-[500px]">
             <img
-              src={main_image || nocollegeimage}
-              alt={`Main image for ${name}`}
+              src={main_image ? getFullURL(main_image) : nocollegeimage}
+              
+              alt={`image for ${name}`}
               className="w-full h-full object-cover object-center cursor-pointer"
               onClick={() => handleImageClick(main_image || nocollegeimage)}
             />

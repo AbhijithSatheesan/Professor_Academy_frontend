@@ -21,6 +21,10 @@ function CollegeCard({ collegeData, onCollegeClick }) {
             src={collegeData.main_image || nocollegeimage}
             alt={`${collegeData.name}`}
             className="absolute inset-0 w-full h-full object-cover"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = nocollegeimage;
+            }}
           />
           {isMarked && (
             <div className="absolute top-2 right-2 bg-yellow-400 text-xs font-bold px-2 py-1 rounded-full">
